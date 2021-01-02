@@ -3,8 +3,11 @@ import styles from './Header.module.css'
 import SearchIcon from "@material-ui/icons/Search";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 import { Link } from 'react-router-dom';
+import {useSelector} from 'react-redux'
 
 function Header() {
+
+    const cart = useSelector(state => state.basket)
     return (
       <div className={styles.header}>
         <Link to="/">
@@ -34,7 +37,7 @@ function Header() {
         <Link to="/checkout">
           <div className={styles.header_basket}>
             <ShoppingBasketIcon />
-            <span className={styles.header_basket_count}>0</span>
+            <span className={styles.header_basket_count}>{cart.length}</span>
           </div>
         </Link>
       </div>

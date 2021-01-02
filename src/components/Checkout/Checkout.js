@@ -1,5 +1,6 @@
 import { StepLabel } from '@material-ui/core';
 import React from 'react'
+import Subtotal from '../Subtotal/Subtotal';
 import styles from './checkout.module.css'
 
 function Checkout() {
@@ -15,7 +16,7 @@ function Checkout() {
           </div>
         </div>
         <div className={styles.checkout_right}>
-          <h2>Your Subtotal</h2>
+          <Subtotal/>
         </div>
       </div>
     );
