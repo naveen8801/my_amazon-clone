@@ -3,7 +3,8 @@ import styles from './Header.module.css'
 import SearchIcon from "@material-ui/icons/Search";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 import { Link } from 'react-router-dom';
-import {useSelector} from 'react-redux'
+import {useSelector} from 'react-redux';
+
 
 function Header() {
 
@@ -21,10 +22,12 @@ function Header() {
           <SearchIcon class={styles.header_search_icon} />
         </div>
         <div className={styles.header_navbar}>
-          <div className={styles.header_navbar_options}>
-            <span className={styles.navbar_options_textone}>Hello Guest</span>
-            <span className={styles.navbar_options_texttwo}>Sign In</span>
-          </div>
+          <Link to="/login" style={{ textDecoration: "none" }}>
+            <div className={styles.header_navbar_options}>
+              <span className={styles.navbar_options_textone}>Hello Guest</span>
+              <span className={styles.navbar_options_texttwo}>Sign In</span>
+            </div>
+          </Link>
           <div className={styles.header_navbar_options}>
             <span className={styles.navbar_options_textone}>Returns </span>
             <span className={styles.navbar_options_texttwo}>Orders</span>

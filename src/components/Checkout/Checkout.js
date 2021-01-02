@@ -1,9 +1,20 @@
 import { StepLabel } from '@material-ui/core';
 import React from 'react'
 import Subtotal from '../Subtotal/Subtotal';
-import styles from './checkout.module.css'
+import styles from './checkout.module.css';
+import {useSelector} from 'react-redux';
+import CheckoutProducts from '../CheckoutProducts/CheckoutProducts';
+
 
 function Checkout() {
+
+    const basket = useSelector(state => state.basket);
+    const p = basket.map(i=>{
+      return <CheckoutProducts title={i.title} imgsrc={i.image} ratings={i.ratings} price={i.price} id={i.id} />
+             
+    })
+    
+
     return (
       <div className={styles.checkout}>
         <div className={styles.checkout_left}>
@@ -14,6 +25,7 @@ function Checkout() {
           <div className={styles.checkout_title}>
             <h2>Your Shopping Basket</h2>
           </div>
+          {p}
         </div>
         <div className={styles.checkout_right}>
           <Subtotal/>
