@@ -4,11 +4,19 @@ import SearchIcon from "@material-ui/icons/Search";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 import { Link } from 'react-router-dom';
 import {useSelector} from 'react-redux';
+import { auth } from "../../firebase";
 
 
 function Header() {
 
     const cart = useSelector(state => state.basket)
+    const user = useSelector((state) => state.user);
+
+    const handleAuth = ()=>{
+        if(user){
+          auth.signOut();
+        }
+    }
     return (
       <div className={styles.header}>
         <Link to="/">
@@ -22,10 +30,10 @@ function Header() {
           <SearchIcon class={styles.header_search_icon} />
         </div>
         <div className={styles.header_navbar}>
-          <Link to="/login" style={{ textDecoration: "none" }}>
-            <div className={styles.header_navbar_options}>
+          <Link to={!user && "/login"} style={{ textDecoration: "none" }}>
+            <div onClick={handleAuth} className={styles.header_navbar_options}>
               <span className={styles.navbar_options_textone}>Hello Guest</span>
-              <span className={styles.navbar_options_texttwo}>Sign In</span>
+              <span className={styles.navbar_options_texttwo}>{user ? 'Sign Out' : 'Sign In'}</span>
             </div>
           </Link>
           <div className={styles.header_navbar_options}>

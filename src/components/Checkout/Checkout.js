@@ -4,6 +4,7 @@ import Subtotal from '../Subtotal/Subtotal';
 import styles from './checkout.module.css';
 import {useSelector} from 'react-redux';
 import CheckoutProducts from '../CheckoutProducts/CheckoutProducts';
+import { auth } from "../../firebase";
 
 
 function Checkout() {
@@ -13,6 +14,7 @@ function Checkout() {
       return <CheckoutProducts title={i.title} imgsrc={i.image} ratings={i.ratings} price={i.price} id={i.id} />
              
     })
+    const user  = useSelector(state => state.user);
     
 
     return (
@@ -23,7 +25,9 @@ function Checkout() {
             src="https://images-na.ssl-images-amazon.com/images/G/02/UK_CCMP/TM/OCC_Amazon1._CB423492668_.jpg"
           ></img>
           <div className={styles.checkout_title}>
-            <h2>Your Shopping Basket</h2>
+            {user ? <h4>Hello ,{user.email}</h4> : null}
+            
+            <h2>Your Shopping Basket :</h2>
           </div>
           {p}
         </div>
