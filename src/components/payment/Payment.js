@@ -1,16 +1,16 @@
-import React ,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./payment.module.css";
-import { useSelector , useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import CheckoutProducts from "../CheckoutProducts/CheckoutProducts";
-import { Link ,useHistory } from "react-router-dom";
-import {CardElement ,useStripe,useElements} from '@stripe/react-stripe-js'
+import { Link, useHistory } from "react-router-dom";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import CurrencyFormat from "react-currency-format";
-import axios from '../../axios';
-
+import axios from "../../axios";
+import { db } from "../../firebase";
 
 function Payment() {
   const dispatch = useDispatch();
-    const history = useHistory();
+  const history = useHistory();
   const user = useSelector((state) => state.user);
   const basket = useSelector((state) => state.basket);
   const subtotal = basket.map((i) => {
@@ -23,63 +23,74 @@ function Payment() {
   const stripe = useStripe();
   const elements = useElements();
 
-//   const [succeeded, setSucceeded] = useState(false);
-//   const [processing, setProcessing] = useState("");
-//   const [error, setError] = useState(null);
-//   const [disabled, setDisabled] = useState(true);
-//   const [ClientSecret, setClientSecret] = useState(true);
+  //   const [succeeded, setSucceeded] = useState(false);
+  //   const [processing, setProcessing] = useState("");
+  //   const [error, setError] = useState(null);
+  //   const [disabled, setDisabled] = useState(true);
+  //   const [ClientSecret, setClientSecret] = useState(true);
 
-        const [succeeded, setSucceeded] = useState(false);
-        const [processing, setProcessing] = useState("");
-        const [error, setError] = useState(null);
-        const [disabled, setDisabled] = useState(true);
-        const [clientSecret, setClientSecret] = useState(true);
+  const [succeeded, setSucceeded] = useState(false);
+  const [processing, setProcessing] = useState("");
+  const [error, setError] = useState(null);
+  const [disabled, setDisabled] = useState(true);
+  const [clientSecret, setClientSecret] = useState(true);
 
-useEffect(() => {
-  // generate the special stripe secret which allows us to charge a customer
-  const getClientSecret = async () => {
-    const response = await axios({  
-      method: "post",
-      url: `/payments/create?total=${sum * 100}`,
-    });
-    setClientSecret(response.data.clientSecret);
-  };
+  useEffect(() => {
+    // generate the special stripe secret which allows us to charge a customer
+    const getClientSecret = async () => {
+      const response = await axios({
+        method: "post",
+        url: `/payments/create?total=${sum * 100}`,
+      });
+      setClientSecret(response.data.clientSecret);
+    };
 
-  getClientSecret();
-}, [basket]);
+    getClientSecret();
+  }, [basket]);
 
-  console.log('The secret is  ' , clientSecret)
+  
   // console.log("👱", user);
 
-const handleSumbit = async (event) => {
-  // do all the fancy stripe stuff...
-  event.preventDefault();
-  setProcessing(true);
+  const handleSumbit = async (event) => {
+    // do all the fancy stripe stuff...
+    event.preventDefault();
+    setProcessing(true);
+    console.log("The secret is  ", clientSecret);
+    const payload = await stripe
+      .confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+        },
+      })
+      .then(({ paymentIntent }) => {
+        
+        db.collection("users")
+          .doc(user?.uid)
+          .collection("orders")
+          .doc(paymentIntent.id)
+          .set({
+            basket: basket,
+            amount: paymentIntent.amount,
+            created: paymentIntent.created,
+          });
 
-  const payload = await stripe
-    .confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: elements.getElement(CardElement),
-      },
-    })
-    .then(({ paymentIntent }) => {
-      setSucceeded(true);
-      setError(null);
-      setProcessing(false);
+        setSucceeded(true);
+        setError(null);
+        setProcessing(false);
 
-      dispatch({
-        type: "EMPTY_BASKET",
+        dispatch({
+          type: "EMPTY_BASKET",
+        });
+
+        history.replace("/orders");
       });
+      console.log(payload);
+  };
 
-      history.replace("/orders");
-    });
-};
-
-   const handleChange = event => {
-        setDisabled(event.empty);
-        setError(event.error ? event.error.message : "");
-   };
-
+  const handleChange = (event) => {
+    setDisabled(event.empty);
+    setError(event.error ? event.error.message : "");
+  };
 
   return (
     <div className={styles.payment}>
@@ -138,7 +149,7 @@ const handleSumbit = async (event) => {
                   prefix={"$"}
                 />
                 <button disabled={processing || disabled || succeeded}>
-                    <span>{processing ? <p>Processing</p> : "Buy Now"}</span>
+                  <span>{processing ? <p>Processing</p> : "Buy Now"}</span>
                 </button>
               </div>
               {error && <div>{error}</div>}

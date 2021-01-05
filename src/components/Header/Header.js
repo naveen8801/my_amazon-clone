@@ -32,14 +32,18 @@ function Header() {
         <div className={styles.header_navbar}>
           <Link to={!user && "/login"} style={{ textDecoration: "none" }}>
             <div onClick={handleAuth} className={styles.header_navbar_options}>
-              <span className={styles.navbar_options_textone}>Hello Guest</span>
-              <span className={styles.navbar_options_texttwo}>{user ? 'Sign Out' : 'Sign In'}</span>
+              <span className={styles.navbar_options_textone}>{user ? user.email : 'Hello Guest'}</span>
+              <span className={styles.navbar_options_texttwo}>
+                {user ? "Sign Out" : "Sign In"}
+              </span>
             </div>
           </Link>
-          <div className={styles.header_navbar_options}>
-            <span className={styles.navbar_options_textone}>Returns </span>
-            <span className={styles.navbar_options_texttwo}>Orders</span>
-          </div>
+          <Link to="/orders" style={{textDecoration : 'none'}}>
+            <div className={styles.header_navbar_options}>
+              <span className={styles.navbar_options_textone}>Returns </span>
+              <span className={styles.navbar_options_texttwo}>Orders</span>
+            </div>
+          </Link>
           <div className={styles.header_navbar_options}>
             <span className={styles.navbar_options_textone}>Your</span>
             <span className={styles.navbar_options_texttwo}>Prime</span>

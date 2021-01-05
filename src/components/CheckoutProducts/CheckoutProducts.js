@@ -24,17 +24,19 @@ function CheckoutProducts(props) {
                 <p>🌟</p>
               ))}
           </div>
-          <button
-            className={styles.checkoutProduct_btn}
-            onClick={() =>
-              dispatch({
-                type: "REMOVE_FROM_BASKET",
-                id: props.id,
-              })
-            }
-          >
-            Remove From Basket
-          </button>
+          {!(props.hiddenbtn) && (
+            <button
+              className={styles.checkoutProduct_btn}
+              onClick={() =>
+                dispatch({
+                  type: "REMOVE_FROM_BASKET",
+                  id: props.id,
+                })
+              }
+            >
+              Remove From Basket
+            </button>
+          )}
         </div>
       </div>
     );

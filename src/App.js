@@ -10,6 +10,7 @@ import Payment from './components/payment/Payment'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import {loadStripe} from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import Orders from "./components/Orders/Orders";
 
 const promise = loadStripe(
   "pk_test_51I5ah2EOHEYZ4I6wh9aET8Wesncn4QoEzV1Vc6S182l4cJS88kTI0SwrX6h3R5ZtkjlouxY1RhBUCFUIU6IXXBUQ00C7r3IYtZ"
@@ -35,6 +36,10 @@ function App() {
     <Router>
       <div className="App">
         <Switch>
+          <Route path="/orders">
+            <Header />
+            <Orders />
+          </Route>
           <Route path="/login">
             <Login />
           </Route>
