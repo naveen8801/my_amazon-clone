@@ -1,3 +1,9 @@
+# --- Amazon Clone ---
+
+This is fully featured amazon clone made with React and Firebase with Stripe Payment feature also 
+
+[Live Frontend Deployed Here](https://clone-d509c.web.app/)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
